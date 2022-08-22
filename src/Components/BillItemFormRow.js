@@ -6,30 +6,18 @@ export default class BillItemFormRow extends React.Component {
     super(props);
     
     // No state, lifting up
-    // this.state = {
-    //   itemName: '',
-    //   itemPrice: '',
-    //   itemPeoplePaying: ''
-    // };
 
     this.handleChange = this.handleChange.bind(this);
   }
 
-  // Update form field state on each key stroke
+  // Field value is in parent state
   handleChange(event) {
-    this.props.onInputChange(event.target.name, event.target.value)
-    // if (event.target.name === 'itemName') {
-    //   this.setState({itemName: event.target.value});
-    // } else if (event.target.name === 'itemPrice') {
-    //   this.setState({itemPrice: event.target.value});
-    // } else if (event.target.name === 'itemPeoplePaying') {
-    //   this.setState({itemPeoplePaying: event.target.value});
-    // }
+    this.props.onInputChange(event.target.name, event.target.value, this.props.itemIndex) // Lift up with this callback
   }
 
   render() {
     return (
-      <div name={this.props.itemIndex} key={this.props.itemIndex}>
+      <div name={this.props.itemIndex} key={this.props.itemIndex}> {/* Need a key for list items, using index b/c no other reasonable ID available */}
         <label>
           Item: 
           <input 
@@ -61,8 +49,16 @@ export default class BillItemFormRow extends React.Component {
 }
 
 /*
-Could do one handler per input, or just use the conditional on an assigned name
+Could do one handler per input
+  if (event.target.name === 'itemName') {
+    this.setState({itemName: event.target.value});
+  } else if (event.target.name === 'itemPrice') {
+    this.setState({itemPrice: event.target.value});
+  } else if (event.target.name === 'itemPeoplePaying') {
+    this.setState({itemPeoplePaying: event.target.value});
+  }
 
+Or just use the conditional on an assigned name
   handleNameChange(event) {
     this.setState({itemName: event.target.value});
   }
