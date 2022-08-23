@@ -5,14 +5,17 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 
 import PageHeading from './Components/PageHeading'
-import BillItemsForm from './Components/BillItemsForm'
+// import BillItemsForm from './Components/BillItemsForm'
+import FormAndResultsParent from './Components/FormAndResultsParent';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     {/* <App /> */}
     <PageHeading firstname='Brandon' lastname='Fuerst' /> {/* Modify to be parent of form and results display */}
-    <BillItemsForm /> {/* Rendering form, put underneath parent */}
+    
+    {/* <BillItemsForm /> Rendering form, put underneath parent */}
+    <FormAndResultsParent />
   </React.StrictMode>
 );
 
