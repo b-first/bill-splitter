@@ -6,6 +6,7 @@ export default class BillItemsForm extends React.Component {
     super(props);
 
     this.handleFormChange = this.handleFormChange.bind(this); // Update value as user types
+    this.handleTipChange = this.handleTipChange.bind(this);
     this.addItem = this.addItem.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -17,6 +18,10 @@ export default class BillItemsForm extends React.Component {
     this.props.onFormChange(eventTargetName, eventTargetValue, itemIndex) // Lift up to parent
     // console.log(eventTargetName, eventTargetValue) // Checking what's passed in
     // console.log(this.state.itemizedList[0][eventTargetName]) // Accesses the specific object field
+  }
+
+  handleTipChange(value) {
+    this.props.onTipChange(value) // Lift up to parent
   }
 
   addItem(event) {
@@ -36,17 +41,31 @@ export default class BillItemsForm extends React.Component {
           itemPrice={item.itemPrice}
           itemPeoplePaying={item.itemPeoplePaying}
           onInputChange={this.handleFormChange} // Child lifts up state using this
-          itemIndex={index} />
+          itemIndex={index}
+          key={index} /> // Put here to clear browser warning, actually using the itemIndex prop
       )
     )
     return (
       <form onSubmit={this.handleSubmit}>
-        {rows} {/* Render all components in this list */}
+        
+        {/* Render tip row first */}
+        <BillItemFormRow
+          isTip={true}
+          onTipChange={this.handleTipChange}
+          key={"tip"}
+          tipAmount={this.props.tipAmount}/>
+
+        {/* Render all components in this list */}
+        {rows}
+
         <br></br><br></br>
+
         <button type="button" onClick={this.addItem}>
           Add Item
         </button>
+        
         <br></br><br></br>
+        
         <input type='submit' value='Submit the Form' />
       </form>
     )

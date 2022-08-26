@@ -8,6 +8,7 @@ export default class BillItemFormRow extends React.Component {
     // No state, lifting up
 
     this.handleChange = this.handleChange.bind(this);
+    this.handleTipChange = this.handleTipChange.bind(this);
   }
 
   // Field value is in parent state
@@ -15,36 +16,61 @@ export default class BillItemFormRow extends React.Component {
     this.props.onInputChange(event.target.name, event.target.value, this.props.itemIndex) // Lift up with this callback
   }
 
-  render() {
-    return (
-      <div name={this.props.itemIndex} key={this.props.itemIndex}> {/* Need a key for list items, using index b/c no other reasonable ID available */}
-        <label>
-          Item: 
-          <input 
-            name='itemName'
-            type='text'
-            value={this.props.itemName}
-            onChange={this.handleChange} />
-        </label>
-        <label>
-          Price:
-          <input
-            name='itemPrice'
-            type='text'
-            value={this.props.itemPrice}
-            onChange={this.handleChange} />
-        </label>
-        <label>
-          People Paying:
-          <input
-            name='itemPeoplePaying'
-            type='text'
-            value={this.props.itemPeoplePaying}
-            onChange={this.handleChange} />
-        </label>
-      </div>
+  handleTipChange(event) {
+    this.props.onTipChange(event.target.value)
+  }
 
-    )
+  render() {
+    let row
+    // Tip row
+    if (this.props.isTip) {
+      row = (
+        <div key={"tip"}> {/* The key should be "tip" */}
+          <label>
+            Tip:
+            <input
+              name="tip"
+              type="text"
+              value={this.props.tipAmount}
+              onChange={this.handleTipChange}/>
+          </label>
+        </div>
+      )
+    
+    // Non-tip rows
+    } else {
+      row = (
+        <div name={this.props.itemIndex} key={this.props.itemIndex}> {/* Need a key for list items, using index b/c no other reasonable ID available */}
+          <label>
+            Item: 
+            <input 
+              name='itemName'
+              type='text'
+              value={this.props.itemName}
+              onChange={this.handleChange} />
+          </label>
+          <label>
+            Price:
+            <input
+              name='itemPrice'
+              type='text'
+              value={this.props.itemPrice}
+              onChange={this.handleChange} />
+          </label>
+          <label>
+            People Paying:
+            <input
+              name='itemPeoplePaying'
+              type='text'
+              value={this.props.itemPeoplePaying}
+              onChange={this.handleChange} />
+          </label>
+        </div>
+
+      )
+    }
+
+    return row
   }
 }
 

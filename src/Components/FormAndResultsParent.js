@@ -1,20 +1,24 @@
 import React from "react";
 import BillItemsForm from "./BillItemsForm.js"; // Import child component
+import BillSplitResults from "./BillSplitResults"; // Import child component
 
 export default class FormAndResultsParent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      tipAmount: 0,
       itemizedList: [ // List of item objects
         {
           itemName: 'item',
           itemPrice: '0',
           itemPeoplePaying: 'TBD'
         }
-      ]
+      ],
+      submittedBill: []
     };
 
     this.handleFormChange = this.handleFormChange.bind(this); // Update value as user types
+    this.handleTipChange = this.handleTipChange.bind(this);
     this.addItem = this.addItem.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -28,9 +32,11 @@ export default class FormAndResultsParent extends React.Component {
     itemToChange[eventTargetName] = eventTargetValue;         // Replace the property you're intested in
     itemizedListToChange[itemIndex] = itemToChange;           // Put it back into the array - we *are* mutating the array here, but that's why we made a copy first
     this.setState({itemizedList: itemizedListToChange})       // Set the state to our new copy
-    
-    // console.log(eventTargetName, eventTargetValue) // Checking what's passed in
-    // console.log(this.state.itemizedList[0][eventTargetName]) // Accesses the specific object field
+  }
+
+  // Update tip value as user types
+  handleTipChange(value) {
+    this.setState({tipAmount: value})
   }
 
   addItem(event) {
@@ -47,17 +53,24 @@ export default class FormAndResultsParent extends React.Component {
   }
 
   handleSubmit(event) {
+    event.preventDefault(); // Do not redirect
     alert('submitted');
-    event.preventDefault();
+    this.setState({submittedBill: [...this.state.itemizedList]}) // Set state object to be the itemized list at time of submission
   }
 
   render() {
     return (
-      <BillItemsForm
-        itemizedList={this.state.itemizedList}
-        onFormChange={this.handleFormChange}
-        onAddItem={this.addItem}
-        onSubmitForm={this.handleSubmit}/>
+      <div>
+        <BillItemsForm
+          itemizedList={this.state.itemizedList}
+          onFormChange={this.handleFormChange}
+          onTipChange={this.handleTipChange}
+          onAddItem={this.addItem}
+          onSubmitForm={this.handleSubmit}
+          tipAmount={this.state.tipAmount} />
+        <BillSplitResults
+          submittedBill={this.state.submittedBill}/>
+      </div>
     )
   }
 }
