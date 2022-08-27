@@ -21,23 +21,23 @@ export default class BillItemsForm extends React.Component {
     let tipForItem;              // Tip amount per item
     let taxForItem;              // Tax amount per item
 
-    // ===================================
-    // Present data table of itemized bill
-
     this.props.submittedBill.forEach((item) => itemizedBillTotal += parseFloat(item.itemPrice)) // Itemized total (pre tax/tip summed)
     taxRate = (this.props.submittedTotal - this.props.submittedTip) / itemizedBillTotal - 1     // Tax rate is pre tip amount over itemized total minus 1
 
-    // Loop over items to create rows of data
+    // ========================
+    // Itemized Bill Data Table
+
+    // Loop over items
     this.props.submittedBill.forEach((item, index) => {
       peoplePaying = item.itemPeoplePaying.split(',').map(person => person.trim()) // Split comma separated people into an array and trim white spaces
       numPeoplePaying = peoplePaying.length
       
-      // Loop over the people and add the item to them (used later for per person table)
+      // Loop over the people and record items associated (for people data table later)
       peoplePaying.forEach((person) => {
-        if (peopleData.hasOwnProperty(person)) {
+        if (peopleData.hasOwnProperty(person)) { // If person already found, add a new item to them
           peopleData[person].push(item)
         } else {
-          peopleData[person] = [item]
+          peopleData[person] = [item]            // For new people, add the first item
         }
       }) 
 
@@ -53,33 +53,8 @@ export default class BillItemsForm extends React.Component {
       )
     })
 
-    // If the bill has been submitted, add tex, tip, and total rows
-    if (this.props.submittedBill.length > 0) {                  // Add tax row (calculte based on user inputs)
-      itemizedRows.push(
-        <tr key='tax'>
-          <td>Tax</td>
-          <td></td>
-          <td>
-            $ {this.props.submittedTotal - this.props.submittedTip - itemizedBillTotal} {/* Tax is total minus tip minus items' cost */}
-          </td>
-        </tr>
-      )
-      itemizedRows.push(                                        // Add tip row
-        <tr key='tip'>
-          <td>Tip</td>
-          <td>$ {this.props.submittedTip}</td>
-        </tr>
-      )
-      itemizedRows.push(                                        // Add total as last row
-        <tr key='total'>
-          <td>Total</td>
-          <td>$ {this.props.submittedTotal}</td>
-        </tr>
-      )
-    }
-
-    // ============================================
-    // Present data table of amount owed per person
+    // ================
+    // People data table
 
     for (const [person, itemsArray] of Object.entries(peopleData)) {
       personTotal = 0
@@ -106,8 +81,8 @@ export default class BillItemsForm extends React.Component {
           </tr>
         )
       }
-      // )
-      peopleRows.push(                                // Add person's total
+
+      peopleRows.push(                                // Add person's total row
           <tr key={'tbd'}>
             <td><b>{person}</b></td>
             <td><b>Total Due</b></td>
@@ -118,9 +93,34 @@ export default class BillItemsForm extends React.Component {
 
     }
 
-    // ================
-    // Table structures
-    
+    // ===============================
+    // Table structure - Itemized Bill
+
+    // If the bill has been submitted (don't render by default), add tax, tip, and total rows
+    if (this.props.submittedBill.length > 0) {                  // Add tax row (calculte based on user inputs)
+      itemizedRows.push(
+        <tr key='tax'>
+          <td>Tax</td>
+          <td></td>
+          <td>
+            $ {this.props.submittedTotal - this.props.submittedTip - itemizedBillTotal} {/* Tax is total minus tip minus items' cost */}
+          </td>
+        </tr>
+      )
+      itemizedRows.push(                                        // Add tip row
+        <tr key='tip'>
+          <td>Tip</td>
+          <td>$ {this.props.submittedTip}</td>
+        </tr>
+      )
+      itemizedRows.push(                                        // Add total as last row
+        <tr key='total'>
+          <td>Total</td>
+          <td>$ {this.props.submittedTotal}</td>
+        </tr>
+      )
+    }
+
     // Create the table with heading and rows of data
     itemizedTable = (
       <table>
@@ -138,7 +138,9 @@ export default class BillItemsForm extends React.Component {
         </tbody>
       </table>
     )
-
+    
+    // ==============================
+    // Table Structure - People Table
     // Create the table with heading and rows of data
     peopleTable = (
       <table>
@@ -159,6 +161,9 @@ export default class BillItemsForm extends React.Component {
         </tbody>
       </table>
     )
+
+    // ================
+    // Return
 
     return (
       <div>
