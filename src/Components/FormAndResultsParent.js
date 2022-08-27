@@ -6,18 +6,22 @@ export default class FormAndResultsParent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      tipAmount: 0,
-      itemizedList: [ // List of item objects
+      userInputTotalAmount: 0,
+      userInputTipAmount: 0,
+      userInputItemizedList: [ // List of item objects
         {
           itemName: 'item',
           itemPrice: '0',
           itemPeoplePaying: 'TBD'
         }
       ],
-      submittedBill: []
+      submittedTotalAmount: 0,
+      submittedTipAmount: 0,
+      submittedItemizedList: []
     };
 
     this.handleFormChange = this.handleFormChange.bind(this); // Update value as user types
+    this.handleTotalChange = this.handleTotalChange.bind(this);
     this.handleTipChange = this.handleTipChange.bind(this);
     this.addItem = this.addItem.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -27,22 +31,26 @@ export default class FormAndResultsParent extends React.Component {
   // Arguments used to pick the proper form input field
   // https://stackoverflow.com/questions/29537299/how-can-i-update-state-item1-in-state-using-setstate
   handleFormChange(eventTargetName, eventTargetValue, itemIndex) {
-    let itemizedListToChange = [...this.state.itemizedList];  // Make a shallow copy of the items
-    let itemToChange = {...itemizedListToChange[itemIndex]};  // Make a shallow copy of the item you want to mutate
-    itemToChange[eventTargetName] = eventTargetValue;         // Replace the property you're intested in
-    itemizedListToChange[itemIndex] = itemToChange;           // Put it back into the array - we *are* mutating the array here, but that's why we made a copy first
-    this.setState({itemizedList: itemizedListToChange})       // Set the state to our new copy
+    let itemizedListToChange = [...this.state.userInputItemizedList]; // Make a shallow copy of the items
+    let itemToChange = {...itemizedListToChange[itemIndex]}; // Make a shallow copy of the item you want to mutate
+    itemToChange[eventTargetName] = eventTargetValue;                 // Replace the property you're intested in
+    itemizedListToChange[itemIndex] = itemToChange;                   // Put it back into the array - we *are* mutating the array here, but that's why we made a copy first
+    this.setState({userInputItemizedList: itemizedListToChange})      // Set the state to our new copy
+  }
+
+  handleTotalChange(value) {
+    this.setState({userInputTotalAmount: value})
   }
 
   // Update tip value as user types
   handleTipChange(value) {
-    this.setState({tipAmount: value})
+    this.setState({userInputTipAmount: value})
   }
 
   addItem(event) {
     this.setState(prevState => ({
-      itemizedList: [ // copy and add new element
-        ...prevState.itemizedList,
+      userInputItemizedList: [ // copy and add new element
+        ...prevState.userInputItemizedList,
         {
           itemName: 'Something',
           itemPrice: '0',
@@ -52,24 +60,29 @@ export default class FormAndResultsParent extends React.Component {
     }))
   }
 
-  handleSubmit(event) {
+  handleSubmit(event) { // Set submitted data to be the current user inputs
     event.preventDefault(); // Do not redirect
-    alert('submitted');
-    this.setState({submittedBill: [...this.state.itemizedList]}) // Set state object to be the itemized list at time of submission
+    this.setState({submittedItemizedList: [...this.state.userInputItemizedList]})
+    this.setState({submittedTipAmount: this.state.userInputTipAmount})
+    this.setState({submittedTotalAmount: this.state.userInputTotalAmount})        
   }
 
   render() {
     return (
       <div>
         <BillItemsForm
-          itemizedList={this.state.itemizedList}
+          itemizedList={this.state.userInputItemizedList}
           onFormChange={this.handleFormChange}
+          onTotalChange={this.handleTotalChange}
           onTipChange={this.handleTipChange}
           onAddItem={this.addItem}
           onSubmitForm={this.handleSubmit}
-          tipAmount={this.state.tipAmount} />
+          tipAmount={this.state.userInputTipAmount}
+          totalAmount={this.state.userInputTotalAmount} />
         <BillSplitResults
-          submittedBill={this.state.submittedBill}/>
+          submittedBill={this.state.submittedItemizedList}
+          submittedTotal={this.state.submittedTotalAmount}
+          submittedTip={this.state.submittedTipAmount} />
       </div>
     )
   }

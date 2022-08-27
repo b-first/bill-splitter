@@ -9,11 +9,16 @@ export default class BillItemFormRow extends React.Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleTipChange = this.handleTipChange.bind(this);
+    this.handleTotalChange = this.handleTotalChange.bind(this);
   }
 
   // Field value is in parent state
   handleChange(event) {
     this.props.onInputChange(event.target.name, event.target.value, this.props.itemIndex) // Lift up with this callback
+  }
+  
+  handleTotalChange(event) {
+    this.props.onTotalChange(event.target.value)
   }
 
   handleTipChange(event) {
@@ -21,9 +26,26 @@ export default class BillItemFormRow extends React.Component {
   }
 
   render() {
-    let row
+    let row;
+
+    // Total row
+    if (this.props.isTotal) {
+      row = (
+        <div key={"total"}>
+          <label>
+            Total Bill:
+            <input
+              name="total"
+              type="text"
+              value={this.props.totalAmount}
+              onChange={this.handleTotalChange}/>
+          </label>
+        </div>
+      )
+    }
+
     // Tip row
-    if (this.props.isTip) {
+    else if (this.props.isTip) {
       row = (
         <div key={"tip"}> {/* The key should be "tip" */}
           <label>

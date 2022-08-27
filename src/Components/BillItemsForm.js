@@ -6,6 +6,7 @@ export default class BillItemsForm extends React.Component {
     super(props);
 
     this.handleFormChange = this.handleFormChange.bind(this); // Update value as user types
+    this.handleTotalChange = this.handleTotalChange.bind(this);
     this.handleTipChange = this.handleTipChange.bind(this);
     this.addItem = this.addItem.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -18,6 +19,10 @@ export default class BillItemsForm extends React.Component {
     this.props.onFormChange(eventTargetName, eventTargetValue, itemIndex) // Lift up to parent
     // console.log(eventTargetName, eventTargetValue) // Checking what's passed in
     // console.log(this.state.itemizedList[0][eventTargetName]) // Accesses the specific object field
+  }
+  
+  handleTotalChange(value) {
+    this.props.onTotalChange(value)
   }
 
   handleTipChange(value) {
@@ -48,12 +53,19 @@ export default class BillItemsForm extends React.Component {
     return (
       <form onSubmit={this.handleSubmit}>
         
-        {/* Render tip row first */}
+        {/* Render total row */}
+        <BillItemFormRow
+          isTotal={true}
+          onTotalChange={this.handleTotalChange}
+          key={'total'}
+          totalAmount={this.props.totalAmount} />
+
+        {/* Render tip row */}
         <BillItemFormRow
           isTip={true}
           onTipChange={this.handleTipChange}
           key={"tip"}
-          tipAmount={this.props.tipAmount}/>
+          tipAmount={this.props.tipAmount} />
 
         {/* Render all components in this list */}
         {rows}
