@@ -6,14 +6,57 @@ export default class FormAndResultsParent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      userInputTotalAmount: 0,
-      userInputTipAmount: 0,
+      userInputTotalAmount: 217.80,
+      userInputTipAmount: 15,
       userInputItemizedList: [ // List of item objects
         {
           itemName: 'item',
           itemPrice: '0',
           itemPeoplePaying: 'TBD'
         }
+
+        // // Test data
+        // {
+        //   itemName: 'Shepherd',
+        //   itemPrice: '16.00',
+        //   itemPeoplePaying: 'Becky'
+        // },
+        // {
+        //   itemName: 'Add chicken D',
+        //   itemPrice: '6.00',
+        //   itemPeoplePaying: 'Becky'
+        // },
+        // {
+        //   itemName: 'Moules Frite',
+        //   itemPrice: '23.00',
+        //   itemPeoplePaying: 'Brandon'
+        // },
+        // {
+        //   itemName: 'Lazzoni Salad',
+        //   itemPrice: '23.00',
+        //   itemPeoplePaying: 'Doug'
+        // },
+        // {
+        //   itemName: 'Octopus D',
+        //   itemPrice: '19.00',
+        //   itemPeoplePaying: 'Alyssa, Rachel'
+        // },
+        // {
+        //   itemName: 'Hummus Balzem',
+        //   itemPrice: '8.00',
+        //   itemPeoplePaying: 'Alyssa, Rachel'
+        // },
+        // {
+        //   itemName: 'Prosciutto wraps',
+        //   itemPrice: '19.00',
+        //   itemPeoplePaying: 'Alyssa, Rachel'
+        // },
+        // {
+        //   itemName: 'Wine',
+        //   itemPrice: '55.00',
+        //   itemPeoplePaying: 'Brandon, Becky, Doug, Rachel'
+        // }
+
       ],
       submittedTotalAmount: 0,
       submittedTipAmount: 0,
